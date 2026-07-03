@@ -1,0 +1,16 @@
+# Development dependencies for local setup (black, isort, pylint, moto, etc.)
+# Not used in CI — serves as a developer reference for local development tooling.
+
+# Linting & Formatting
+black==26.3.1
+isort==6.0.1
+pylint==3.3.8
+
+# Testing
+pytest==9.0.3
+pytest-cov==6.2.1
+moto==5.1.10
+coverage==7.10.4
+
+# Type checking
+mypy_extensions==1.1.0

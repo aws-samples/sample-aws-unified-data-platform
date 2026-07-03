@@ -1,0 +1,12 @@
+sns_topics:
+  aws_samples_udm_pipeline_failure:
+    - protocol: "email"
+      endpoint: "pipeline-alerts@example.com"
+    - protocol: "email"
+      endpoint: "data-team@example.com"
+  
+  aws_samples_udm_pipeline_downstream:
+    - protocol: "email"
+      endpoint: "pipeline-alerts@example.com"
+    - protocol: "email"
+      endpoint: "data-team@example.com"

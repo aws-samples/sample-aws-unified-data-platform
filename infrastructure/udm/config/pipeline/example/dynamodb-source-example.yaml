@@ -1,0 +1,46 @@
+## Example: DynamoDB Source Pipeline
+## Copy this file to config/pipeline/{env}/ and customize for your use case.
+
+source: my-table
+source_type: dynamodb
+source_table_name: my-dynamodb-table-{env}
+source_incremental_col: updated_timestamp
+
+stage:
+  database_name: aws_samples_udm_raw_{env}
+  target_table_name: my_table_raw
+  load_method: append
+
+curation:
+  - name: my_table_curated
+    database_name: aws_samples_udm_curated_{env}
+    target_table_name: my_table_curated
+    filter_source_data: "status is not null"
+    load_method: upsert
+    primary_keys:
+      - id
+      - hash_key
+
+    # Optional: Data Quality Rules
+    data_quality:
+      enabled: false
+      exception_handling:
+        exception_database: "aws_samples_udm_curated_{env}"
+        max_error_threshold: 0
+        fail_on_threshold: false
+      rules:
+        validity:
+          - column: "status"
+            valid_values: ["active", "inactive", "pending"]
+        column_length:
+          - column: "name"
+            operator: "<="
+            length: 200
+
+    columns:
+      - id
+      - hash_key
+      - name
+      - status
+      - created_date
+      - updated_timestamp

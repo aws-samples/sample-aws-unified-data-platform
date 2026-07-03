@@ -1,0 +1,116 @@
+## Example: Pipeline with Custom Data Quality (DQDL) Rules
+## This example shows how to add ANY DQDL rule type without code changes.
+## Copy this file to config/pipeline/{env}/ and customize for your use case.
+
+source: my-table
+source_type: dynamodb
+source_table_name: my-dynamodb-table-{env}
+source_incremental_col: updated_timestamp
+
+stage:
+  database_name: aws_samples_udm_raw_{env}
+  target_table_name: my_table_raw
+  load_method: append
+
+curation:
+  - name: my_table_curated
+    database_name: aws_samples_udm_curated_{env}
+    target_table_name: my_table_curated
+    filter_source_data: "status is not null"
+    load_method: upsert
+    primary_keys:
+      - id
+      - hash_key
+    columns:
+      - id
+      - name
+      - amount
+      - status
+
+    # Data Quality with Custom DQDL Templates
+    data_quality:
+      exception_handling:
+        exception_database: "aws_samples_udm_curated_{env}"
+        max_error_threshold: 0
+        fail_on_threshold: false
+
+      rules:
+        # ===== Built-in Simplified Syntax =====
+        completeness:
+          - column: "id"
+            threshold: 1.0
+          - column: "name"
+            threshold: 0.95
+
+        uniqueness:
+          - columns: ["id", "hash_key"]
+
+        validity:
+          - column: "status"
+            valid_values: ["active", "inactive", "pending"]
+
+        accuracy:
+          - column: "amount"
+            min_value: 0
+
+        # ===== Custom DQDL Templates (No Code Changes Needed) =====
+
+        column_length:
+          - column: "name"
+            operator: "<="
+            length: 200
+
+        data_freshness:
+          - column: "updated_timestamp"
+            max_days: 30
+
+        mean:
+          - column: "amount"
+            operator: ">"
+            value: 0
+
+        custom_rules:
+          - dqdl_template: 'ColumnDataType "{column}" = "{data_type}"'
+            column: "amount"
+            data_type: "double"
+
+          - dqdl_template: 'ColumnExists "{column}"'
+            column: "id"
+
+          - dqdl_template: 'ColumnValues "{column}" matches "{pattern}"'
+            column: "name"
+            pattern: "^[A-Za-z0-9_-]+$"
+
+  - name: my_table_xref
+    database_name: aws_samples_udm_curated_{env}
+    target_table_name: my_table_xref
+    filter_source_data: "status is not null and ref_list is not null"
+    load_method: upsert
+    primary_keys:
+      - id
+      - ref_id
+    columns:
+      - id
+      - name
+      - ref_id
+
+# Default transformation templates
+defaults:
+  string:
+    missing_value_default: ""
+  float:
+    missing_value_default: 0.0
+
+# Column transformations
+columns:
+  id:
+    type: string
+  name:
+    type: string
+  amount:
+    type: float
+  status:
+    type: string
+  ref_id:
+    type: array_explode
+    source_path: "ref_list"

@@ -1,0 +1,23 @@
+## Example: Downstream Integration Configuration
+## Copy this file to config/downstream/{env}/config.yaml and customize.
+
+downstream_configs:
+  # Trigger a Step Function after UDM pipeline completes for specific tables
+  - tables_list:
+      - my-table-{env}
+    service_type: "step_function"
+    service_arn: "arn:aws:states:us-east-1:111122223333:stateMachine:downstream-pipeline-{env}"
+
+  # Trigger a Lambda function to create semantic views
+  - tables_list:
+      - my-metadata-table-{env}
+    service_type: "lambda"
+    service_arn: "arn:aws:lambda:us-east-1:111122223333:function:aws-samples-udm-semantic-view-create-{env}"
+    additional_parameters:
+      env_name: "{env}"
+      metadata_db_name: "aws_samples_udm_curated_{env}"
+      metadata_table_name: "my_fields_metadata"
+      semantic_db_name: "aws_samples_udm_semantic_{env}"
+      target_view_name: "my_semantic_view"
+      source_db_name: "aws_samples_udm_curated_{env}"
+      source_table_name: "my_table_curated"

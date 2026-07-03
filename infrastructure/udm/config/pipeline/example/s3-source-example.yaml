@@ -1,0 +1,23 @@
+## Example: S3 File Source Pipeline (Excel/CSV/JSON)
+## Copy this file to config/pipeline/{env}/ and customize for your use case.
+
+source: my-s3-data
+source_type: xlsx  # Options: xlsx, csv, json
+source_s3_path: s3://my-source-bucket-111122223333-us-east-1-{env}/data/my_data.xlsx
+
+stage:
+  database_name: aws_samples_udm_raw_{env}
+  target_table_name: my_s3_data_raw
+  s3:
+    target_bucket: s3://aws-samples-raw-111122223333-us-east-1-{env}/
+    partition_col: udm_processed_date
+    load_method: overwrite
+
+curation:
+  - name: my_s3_data_curated
+    database_name: aws_samples_udm_curated_{env}
+    target_table_name: my_s3_data_curated
+    s3:
+      target_bucket: s3://aws-samples-curated-111122223333-us-east-1-{env}/
+      partition_col: udm_processed_date
+      load_method: overwrite

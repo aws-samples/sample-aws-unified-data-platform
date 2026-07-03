@@ -1,0 +1,34 @@
+## Example: EventBridge Rules Configuration
+## Copy this file to config/eventbridge-rules/{env}/rules.yaml and customize.
+
+eventbridge_rules:
+  # Trigger pipeline when a file is uploaded to S3
+  - name: "my-data-upload-trigger"
+    rule_type: "s3_object_created"
+    s3_bucket_name: "my-source-bucket-111122223333-{env}"
+    s3_key_prefix: "data/uploads/"
+    target_step_function: "aws_samples_udm_pipeline"
+    enabled: true
+    input_parameters:
+      tables_list:
+        - "my-table-{env}"
+
+  # Trigger pipeline when another Step Function completes
+  - name: "upstream-completion-trigger"
+    rule_type: "step_function_completion"
+    source_step_function_arn: "arn:aws:states:us-east-1:111122223333:stateMachine:upstream-pipeline-{env}"
+    completion_status: "SUCCEEDED"
+    target_step_function: "aws_samples_udm_pipeline"
+    enabled: false
+    input_parameters:
+      tables_list:
+        - "dependent-table-{env}"
+
+scheduled_rules:
+  # Run pipeline on a daily schedule
+  - name: "udm-daily-pipeline"
+    schedule_expression: "cron(0 2 * * ? *)"
+    target_step_function: "aws_samples_udm_pipeline"
+    enabled: false
+    tables_list:
+      - "my-table-{env}"

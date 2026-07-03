@@ -1,0 +1,10 @@
+[run]
+source = src/glue/udm
+omit = */__init__.py
+relative_files = True
+
+[html]
+directory = htmlcov
+
+[report]
+show_missing = True

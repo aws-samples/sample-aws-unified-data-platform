@@ -1,0 +1,17 @@
+udm_test_config:
+  database: "contracts_invoices_east_db"
+  
+  tables_to_check:
+    - name: "document_data_metadata_qa"
+    - name: "contract_data_metadata_qa"
+    - name: "invoice_fee_table_qa"
+    - name: "invoice_metadata_table_qa"
+    - name: "invoice_mapping_result_qa"
+#    - name: "ABCinvoice_metadata_table_qa"
+
+
+runtime:
+  region: "${AWS_REGION:-us-east-1}"
+  environment: "${AWS_ENVIRONMENT:-qa}"
+  account_id: "${AWS_ACCOUNT_ID:-111122223333}"
+  output_bucket: "${OUTPUT_BUCKET:-contracts-invoices-output-bucket-qa}"

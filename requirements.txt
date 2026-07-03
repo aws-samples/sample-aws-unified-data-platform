@@ -1,0 +1,17 @@
+# AWS
+boto3==1.40.15
+botocore==1.40.15
+awswrangler==3.12.1
+aws-lambda-powertools>=2.0.0
+
+# Data processing
+pyspark>=3.5.2
+pandas==2.3.1
+numpy==2.3.2
+
+# Utilities
+PyYAML==6.0.2
+python-dateutil==2.9.0.post0
+pytz==2025.2
+typing_extensions==4.14.1
+setuptools==80.9.0
