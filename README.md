@@ -2,7 +2,7 @@
 
 ## Overview
 
-The UDM (Unified Data Model) Utility is a standalone, reusable data processing framework built on AWS that implements a medallion architecture (Bronze, Silver, Gold layers) for standardizing and transforming data from various sources into a consistent, analytics-ready format.
+The UDM (Unified Data Model) Utility is a standalone, reusable data processing framework built on AWS that implements a medallion architecture (Bronze, Silver, Gold layers) for standardizing and transforming data from various sources into a consistent, analytics-ready format
 
 It provides an event-driven, serverless pipeline that ingests raw data from sources such as DynamoDB tables and S3 files, applies configurable transformation and cleansing logic, and produces curated datasets accessible via Amazon Athena. The framework is designed to be highly configurable through YAML-based pipeline definitions, enabling teams to onboard new data sources without writing custom ETL code. Built-in audit trails, failure notifications, and downstream integration capabilities support operational requirements across multiple environments.
 
