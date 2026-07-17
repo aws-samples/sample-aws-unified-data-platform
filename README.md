@@ -18,6 +18,10 @@ It provides an event-driven, serverless pipeline that ingests raw data from sour
 - **Audit & Monitoring**: Built-in audit trails and SNS notifications for pipeline status
 - **Apache Iceberg Support**: Uses Iceberg table format for efficient data management
 
+### Leveraging This Platform for AI/ML Workloads
+
+The curated and semantic data layers produced by this framework provide a direct foundation for AI and machine learning workloads. The Gold layer Athena views expose clean, business-aligned datasets that can serve as training data sources or feature inputs for ML models. Additionally, because the Gold layer presents data through standard SQL views in Athena, it can serve as the backend for conversational AI interfaces - enabling natural language querying over curated datasets via text-to-SQL agents or AI-powered analytics tools that connect directly to Athena as a data source. Because the platform stores data in Apache Iceberg format on S3, ML teams gain schema evolution and time-travel capabilities - enabling reproducible dataset snapshots for experiment tracking without duplicating data. The Step Functions orchestration can be extended with additional states to trigger downstream ML workflows (such as SageMaker Training jobs or Batch inference) using the same event-driven pattern the pipeline already implements via EventBridge rules and SNS notifications. The existing `downstream_trigger` Lambda demonstrates this extensibility — it publishes completion events that external services can subscribe to, making it straightforward to chain ML pipelines after data curation completes. Similarly, the YAML-based configuration approach used for pipeline definitions can be adopted to define ML pipeline parameters, keeping infrastructure-as-code consistency across data and AI workloads.
+
 ## Architecture
 
 ![UDM Architecture](docs/architecture.png)
