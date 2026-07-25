@@ -14,4 +14,4 @@ PyYAML==6.0.2
 python-dateutil==2.9.0.post0
 pytz==2025.2
 typing_extensions==4.14.1
-setuptools==80.9.0
+setuptools==83.0.0
